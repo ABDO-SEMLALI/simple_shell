@@ -16,20 +16,25 @@
 #define READ_BUF_SIZE 1024
 #define WRITE_BUF_SIZE 1024
 #define BUF_FLUSH -1
+#define MAX_NUM_ARGS 64
+#define MAX_COMMAND_LENGTH 1024
+#define PROMPT ">> "
+#define MAX_PATH 260
+#define MAX_ARGS 65536
 
 /* for command chaining */
 #define CMD_NORM	0
-#define CMD_OR		1
-#define CMD_AND		2
-#define CMD_CHAIN	3
+#define CMD_OR	        1
+#define CMD_AND	        2
+#define CMD_CHAIN       3
 
 /* for convert_number() */
 #define CONVERT_LOWERCASE	1
 #define CONVERT_UNSIGNED	2
 
 /* 1 if using system getline() */
-#define USE_GETLINE 0
-#define USE_STRTOK 0
+#define USE_GETLINE	0
+#define USE_STRTOK	0
 
 #define HIST_FILE	".simple_shell_history"
 #define HIST_MAX	4096
@@ -51,15 +56,15 @@ typedef struct liststr
 } list_t;
 
 /**
- * struct passinfo - contains pseudo-arguements to pass into a function,
+ * structr passinfo - contains pseudo-arguments to pass into a function,
  * allowing uniform prototype for function pointer struct
- * @arg: a string generated from getline containing arguements
- * @argv:an array of strings generated from arg
- * @path: a string path for the current command
+ * @arg: a string generated from getline containing arguments
+ * @argv: an array of strings generated from arg
+ * @path a string path for the current command
  * @argc: the argument count
  * @line_count: the error count
  * @err_num: the error code for exit()s
- * @linecount_flag: if on count this line of input
+ * @linecout_flag: if on count this line of input
  * @fname: the program filename
  * @env: linked list local copy of environ
  * @environ: custom modified copy of environ from LL env
@@ -89,7 +94,7 @@ typedef struct passinfo
 	int env_changed;
 	int status;
 
-	char **cmd_buf; /* pointer to cmd ; chain buffer, for memory mangement */
+	char **cmd_buf; /* pointer to cmd ; chain buffer, for memory management */
 	int cmd_buf_type; /* CMD_type ||, &&, ; */
 	int readfd;
 	int histcount;
@@ -97,11 +102,11 @@ typedef struct passinfo
 
 #define INFO_INIT \
 {NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
-		0, 0, 0}
+	0, 0, 0}
 
 /**
  * struct builtin - contains a builtin string and related function
- * @type: the builtin command flag
+ * type: the builtin command flag
  * @func: the function
  */
 typedef struct builtin
@@ -121,7 +126,7 @@ void fork_cmd(info_t *);
 int is_cmd(info_t *, char *);
 char *dup_chars(char *, int, int);
 char *find_path(info_t *, char *, char *);
-
+void parse_command(char* command, char** args, int* num_args);
 /* loophsh.c */
 int loophsh(char **);
 
@@ -144,20 +149,21 @@ void _puts(char *);
 int _putchar(char);
 
 /* toem_exits.c */
-char *_strncpy(char *, char *, int);
+char *_strncpy(char *,	int);
 char *_strncat(char *, char *, int);
 char *_strchr(char *, char);
+void parse_command(char *command, char **args, int *num_args);
 
 /* toem_tokenizer.c */
 char **strtow(char *, char *);
 char **strtow2(char *, char);
 
-/* toem_realloc.c */
+/*toem_realloc.c */
 char *_memset(char *, char, unsigned int);
 void ffree(char **);
 void *_realloc(void *, unsigned int, unsigned int);
 
-/* toem_memory.c */
+/*toem_memory.c */
 int bfree(void **);
 
 /* toem_atoi.c */
@@ -182,12 +188,12 @@ int _myhelp(info_t *);
 int _myhistory(info_t *);
 int _myalias(info_t *);
 
-/*toem_getline.c */
+/* toem_getline.c */
 ssize_t get_input(info_t *);
 int _getline(info_t *, char **, size_t *);
 void sigintHandler(int);
 
-/* toem_getinfo.c */
+/*toem_getinfo.c */
 void clear_info(info_t *);
 void set_info(info_t *, char **);
 void free_info(info_t *, int);
